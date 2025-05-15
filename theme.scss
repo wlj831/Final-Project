@@ -1,0 +1,89 @@
+/*-------------------------------------------------
+  Generic SCSS Starter
+  Replace the sample values with your own brand
+--------------------------------------------------*/
+
+/*-- scss:defaults --*/
+
+// ── Brand Palette ────────────────────────────────
+$color-primary:   #123456;  // ← Replace with brand primary
+$color-secondary: #ABCDEF;  // ← Replace with brand secondary
+
+// Optional accent & neutral tones
+$accent-1:  #FF7F00;  // e.g., highlight / link
+$accent-2:  #A6CE6E;  // e.g., success
+$neutral-0: #FFFFFF;  // light / backgrounds
+$neutral-1: #F5F5F5;  // eggshell / subtle sections
+$neutral-9: #121212;  // near-black text
+
+// ── Typography ──────────────────────────────────
+$font-primary:    Arial, sans-serif;
+$font-secondary:  Georgia, serif;
+$font-body:       $font-primary;
+
+// ── Derived / utility variables ─────────────────
+$color-secondary-dark: darken($color-secondary, 10%);
+
+/*-- scss:rules --*/
+
+/* Global body styles */
+body {
+  font-family: $font-body;
+  color: $neutral-9;
+  background-color: $neutral-1;
+  margin: 0;
+  padding: 0;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-primary;
+  font-weight: bold;
+  margin-top: 0;
+}
+
+h1 { color: $color-primary;   }
+h2 { color: $color-secondary-dark; }
+h3 { color: $accent-1;        }
+
+/* Paragraphs */
+p {
+  font-size: 1em;
+  line-height: 1.5;
+  color: $neutral-9;
+}
+
+/* Links */
+a {
+  color: $accent-1;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Code blocks */
+pre code {
+  background: $neutral-9;
+  color: $color-secondary;
+  font-size: 1em;
+  padding: 0.9em 1.1em;
+  border-radius: 5px;
+  border: 2px solid $accent-2;
+  overflow-x: auto;
+}
+
+/* Highlight utility */
+.highlight {
+  background-color: $accent-1;
+  color: $neutral-0;
+  padding: 0.2em 0.4em;
+  border-radius: 0.2em;
+}
+
+/* Example animation (optional) */
+@keyframes progressColor {
+  0%   { background-color: $color-primary;   }
+  100% { background-color: $color-secondary; }
+}

@@ -1,0 +1,108 @@
+---
+title: "Résumé"
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+```{r knit-resume, echo=FALSE, message=FALSE}
+rmarkdown::render(
+  "resume/Resume.Rmd",
+  output_format = "pdf_document",
+  output_file   = "Resume.pdf",
+  output_dir    = "resume",
+  quiet         = TRUE
+)
+```
+
+You can view a PDF version of my résumé [here](resume/Resume.pdf).
+
+# Objective
+
+Utilize my knowledge obtained in my bachelor’s degree of biology to work
+in the pharmaceutical and biotechnology industries. My industry and
+educational experiences have been focused in the following areas:
+manufacturing, quality control/assurance, implementation of GMP
+regulated SOPs, environmental monitoring, chemical analysis, genetic
+isolation of microbial DNA, and industry experience in an FDA regulated
+environment. These skills will allow me to be an optimal asset to any
+pharmaceutical or biotechnology company.
+
+# Technical Skills
+
+-   **Basic Programming Languages:** R and Python\
+-   **Web Technologies:** HTML, CSS/SCSS, Quarto, CMS Platforms,
+    Analytics Tools
+
+# Education
+
+| Degree     | Year        | College / Department | Institution     |
+|------------|-------------|----------------------|-----------------|
+| MBA        | 2023 – 2025 | Business             | Cal Poly Pomona |
+| BA Biology | 2012 – 2017 | Biological Sciences  | CSUN            |
+
+# Work Experience
+
+### QA Operations Specialist, Kite Pharma (Gilead Sciences)
+
+*May 2022 – Present*
+
+Responsible for receiving and ensuring that apheresis material for cell
+culture manufacturing at the El Segundo site is within the GMP
+regulations. Additional roles include final shipment verification,
+review of packaging and manufacturing MPRs, generating final label
+material, and verifying final label material.
+
+SKILLS OBTAINED:
+
+• Handling of Apheresis Material
+
+• Review of Manufacturing and Shipment Documentation
+
+• GMP/GDP documentation
+
+• FDA regulated environment • Initiating and resolving deviations within
+the department
+
+• Use of Oracle EBS, GLIMS, Kite Konnect, and Veeva Vault
+
+• Excel, Word, and PowerPoint
+
+• Understanding of the operations of cell culture manufacturing
+
+• CAR T-cell therapeutics
+
+------------------------------------------------------------------------
+
+### QA Specialist, Gilead Sciences
+
+*March 2021 – May 2022*
+
+Assists the Gilead La Verne and San Dimas sites with investigations into
+root causes for deviations in the following departments: Manufacturing,
+Quality Control, Packaging, Quality Assurance, and Engineering
+departments.
+
+SKILLS OBTAINED:
+
+• Managing Multiple Investigations
+
+• Interdepartmental Communication
+
+• Investigation of Root Cause
+
+• Assisting in Initiating CAPAs
+
+Report Writing
+
+• Conducting Interdepartmental Meetings
+
+• Understanding of Site Wide Operations
+
+• Thorough Knowledge of GMPs and GLPs
+
+• Use of SCADA, PCS, Maximo, GTrack, and Veeva Vault
+
+• Excel, Word, and PowerPoint • Conducting Interviews
+
+------------------------------------------------------------------------

@@ -1,0 +1,21 @@
+---
+title: "Projects in GBA 5910"
+listing: 
+  contents: listings
+  type: grid
+  categories: true
+  sort: 
+    - "index desc"
+---
+
+Below are selected projects that highlight my experience applying Data wrangling and Data Visualization to real-world challenges. These projects reflect my ability to combine statistical tools, campaign data, and strategic thinking to inform decisions and drive results.
+
+Whether developing dashboards, analyzing data performance, or uncovering insights through analytics, each project is rooted in the use of R studio, python, and data visualization for actionable items.
+
+## What You’ll Find
+
+- **Data Wrangling:** Cleaning data sets or larger amount of data through python and R strudio functions. 
+- **Data Visualization:** Managing large data sets to depict the information through graphical imagery.
+
+
+---

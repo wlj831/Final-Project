@@ -1,0 +1,490 @@
+---
+title: "M11-2-Application-R_Programing.qmd"
+author: "William Jackson"
+date: "`r format(Sys.time())`"
+format: 
+  html:
+    theme: darkly
+    toc: true
+    toc-location: right
+    toc-depth: 4
+    code-fold: false
+    code-line-numbers: true
+    code-link: true
+    number-sections: false
+    embed-resources: true
+    df-print: paged
+execute: 
+  freeze: auto
+  echo: true
+  warning: false
+  error: false
+---
+
+# Question 1
+
+>Create a vector "quantity" and assign 50 to it. If the quantity is greater than 20, your code should print "You sold a lot"; otherwise, print "Not enough for today."
+
+```{r}
+# Create a vector named "quantity"
+quantity <- 50
+
+# Check if quantity is greater than 20
+if (quantity > 20) {
+  print("You sold a lot")
+} else {
+  print("Not enough for today.")
+}
+```
+# Question 2 
+> Create a vector "sales" and assign the value 25 to it. If the value is less than 20, your code should print "Not enough for today." If the quantity sold is between 20 and 30 inclusively, print "Average Day." If your sales amount is greater than 30, print out "You had a great day!"
+
+```{r}
+# Create a vector named "sales"
+sales <- 25
+
+# Conditional checks
+if (sales < 20) {
+  print("Not enough for today.")
+} else if (sales >= 20 && sales <= 30) {
+  print("Average Day.")
+} else {
+  print("You had a great day!")
+}
+```
+# Question 3 
+
+> Each product has its own category and also the respective tax rate applied to it. Therefore, products in category "A" are taxed by 8%, category "B" by 10%, and category "C" by 20%. Create a vector, "category," and assign a value "A" to the vector. Also,  create a vector "price" and assign it 100. Create an if statement that identifies the categories and applies the tax rate to the price of this product. In the end, print the tax rate applied and the final price. For example, for a product in the "B" category (price=10), your printout must be: "A tax rate of 10% is applied. The total price is 11."
+
+```{r}
+# Create vectors
+category <- "A"
+price <- 100
+
+# Apply tax rate based on category
+if (category == "A") {
+  tax_rate <- 0.08
+} else if (category == "B") {
+  tax_rate <- 0.10
+} else if (category == "C") {
+  tax_rate <- 0.20
+} else {
+  tax_rate <- 0
+}
+
+# Calculate total price
+total_price <- price * (1 + tax_rate)
+
+# Print the results
+print(paste0("A tax rate of ", tax_rate * 100, "% is applied. The total price is ", total_price, "."))
+```
+
+# Question 4 
+
+> Create a for loop to count the even numbers in a vector q4. This vector must contain the values 2, 5, 3, 9, 8, 11, and 6. Your output must be 3. 
+
+```{r}
+# Create the vector q4
+q4 <- c(2, 5, 3, 9, 8, 11, 6)
+
+# Initialize counter
+even_count <- 0
+
+# For loop to count even numbers
+for (num in q4) {
+  if (num %% 2 == 0) {
+    even_count <- even_count + 1
+  }
+}
+
+# Print the number of even numbers
+print(even_count)
+```
+# Question 5 
+> Create a vector q5 in the range of 1 to 8. For each one of the numbers in the vector, if it is greater than 4 and even, print it. Otherwise, print "Condition not satisfied".  Your output must have 8 lines, showing the numbers 6 and 8 in two of the eight lines. 
+
+```{r}
+# Create the vector q5
+q5 <- 1:8
+
+# For loop to check conditions
+for (num in q5) {
+  if (num > 4 && num %% 2 == 0) {
+    print(num)
+  } else {
+    print("Condition not satisfied")
+  }
+}
+```
+
+# Question 6 
+
+> Create a function called "pow" that takes two arguments: x and y. The first argument is raised to the power of the second one, and prints the result like this: "8 raised to the power of 2 is 64." Lastly, call the function with those values after creating the function.
+
+```{r}
+# Create the function "pow"
+pow <- function(x, y) {
+  result <- x^y
+  print(paste0(x, " raised to the power of ", y, " is ", result, "."))
+}
+
+# Call the function with x = 8 and y = 2
+pow(8, 2)
+```
+
+# Question 7 
+
+> Q7.1. Run this line of code: df <- data.frame(x = 1:4, y = 5:8, z = 10:13). Use the apply function to get the mean and sum of each ROW on this dataframe. Add them to the data frame. 
+
+```{r}
+# Create the dataframe
+df <- data.frame(x = 1:4, y = 5:8, z = 10:13)
+
+# Calculate row means and sums using apply()
+row_means <- apply(df, 1, mean)
+row_sums <- apply(df, 1, sum)
+
+# Add the results to the original dataframe
+df$mean <- row_means
+df$sum <- row_sums
+
+# Print the updated dataframe
+print(df)
+```
+> Q7.2. Create a vector called q8 and assign the values 12, 18, and 6. Next, use the apply family and map family functions to calculate the square root of each element.
+
+```{r}
+# Create the vector q8
+q8 <- c(12, 18, 6)
+
+# Using sapply (apply family) to calculate the square root
+sqrt_sapply <- sapply(q8, sqrt)
+print(sqrt_sapply)
+
+# Using purrr::map (map family) to calculate the square root
+library(purrr)
+sqrt_map <- map_dbl(q8, sqrt)  # map_dbl because we want numeric output
+print(sqrt_map)
+```
+
+> Q7.3. Run this code below: q9 <- list(A = 1:5, B = 6:20, C = 1). Use the apply family and map family functions to calculate the number of components of each element of this list. *Hint*: Use the length function.
+
+```{r}
+# Create the list q9
+q9 <- list(A = 1:5, B = 6:20, C = 1)
+
+# Using sapply (apply family) to calculate the length of each element in the list
+length_sapply <- sapply(q9, length)
+print(length_sapply)
+
+# Using purrr::map (map family) to calculate the length of each element
+library(purrr)
+length_map <- map_int(q9, length)  # map_int because we want integer output
+print(length_map)
+```
+
+>Q7.4. What is the difference between lapply and sapply functions. Which map functions are similar to them? Consider that you want to calculate the exponentials of three numbers. In this case, which function you should use and why? Type your answer as a comment?
+
+```{r}
+# Difference between lapply and sapply:
+
+# lapply() returns a list regardless of the output structure, even if the results can be simplified.
+# sapply() attempts to simplify the output (for example, into a vector, matrix, or array) whenever possible.
+
+# Map equivalents:
+# - lapply() is similar to map() (both return a list).
+# - sapply() is similar to map_lgl(), map_int(), map_dbl(), or map_chr(), depending on the desired output type.
+
+# To calculate exponentials of three numbers:
+numbers <- c(2, 3, 4)
+
+# Using lapply() (returns a list)
+exp_lapply <- lapply(numbers, exp)
+print(exp_lapply)
+
+# Using sapply() (returns a vector)
+exp_sapply <- sapply(numbers, exp)
+print(exp_sapply)
+
+# The best function to use depends on the desired output:
+# If you want a list of the results, use lapply().
+# If you want a simplified output like a numeric vector, use sapply().
+
+# In this case, I would recommend using sapply() because the result is numeric and simplified (vector), 
+# which is more appropriate when you're calculating exponentials for a set of numbers and need a vector of results.
+```
+
+# Question 8 
+
+> Q8.1: First, execute the following codes in the code chunk to read the data into R and set the global theme. 
+
+```{r}
+library(tidyverse)
+
+theme_set(theme_bw())
+
+student_ratio <- read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-05-07/student_teacher_ratio.csv")
+```
+> Q8.2. Explore the data. Especially count the number of "year", the "indicator", and "country", separately. 
+
+```{r}
+# Count the number of unique years
+year_count <- student_ratio %>%
+  count(year)
+
+# Count the number of unique indicators
+indicator_count <- student_ratio %>%
+  count(indicator)
+
+# Count the number of unique countries
+country_count <- student_ratio %>%
+  count(country)
+
+# Display the counts
+year_count
+indicator_count
+country_count
+```
+
+> Q8.3. Next, draw a chart that shows the top and bottom 10 countries in student-teacher ratio for 2012. 
+
+```{r}
+# Inspect column names to confirm the correct column name for the ratio
+colnames(student_ratio)
+
+# Filter the data for the year 2012
+data_2012 <- student_ratio %>%
+  filter(year == 2012) %>%
+  arrange(desc(student_ratio))  # Sort by the student-teacher ratio
+
+# Get the top and bottom 10 countries
+top_bottom_10 <- bind_rows(
+  head(data_2012, 10),  # Top 10 countries
+  tail(data_2012, 10)   # Bottom 10 countries
+)
+
+# Create a bar chart to visualize the top and bottom 10 countries
+ggplot(top_bottom_10, aes(x = reorder(country, student_ratio), y = student_ratio, fill = student_ratio > 1)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +  # Flip the coordinates for better readability
+  labs(
+    title = "Top and Bottom 10 Countries in Student-Teacher Ratio (2012)",
+    x = "Country",
+    y = "Student-Teacher Ratio"
+  ) +
+  theme_minimal()
+```
+> Q8.4. Note that there are six years from 2012 to 2017 that have a significant number of observations, conducive for drawing charts by year. Since you don't want to copy and paste the code again and again, you want to create a function that allows you to use it to draw all the charts by simply entering "year" information into the function. You will want to show "year" information in the chart as a subtitle. Create such a function.
+
+```{r}
+# Define the function to create a chart for a given year
+create_student_teacher_chart <- function(year) {
+  # Filter the data for the specified year
+  data_year <- student_ratio %>%
+    filter(year == year) %>%
+    arrange(desc(student_ratio))  # Sort by the student-teacher ratio
+  
+  # Get the top and bottom 10 countries
+  top_bottom_10 <- bind_rows(
+    head(data_year, 10),  # Top 10 countries
+    tail(data_year, 10)   # Bottom 10 countries
+  )
+  
+  # Create the bar chart
+  ggplot(top_bottom_10, aes(x = reorder(country, student_ratio), y = student_ratio, fill = student_ratio > 1)) +
+    geom_bar(stat = "identity") +
+    coord_flip() +  # Flip the coordinates for better readability
+    labs(
+      title = paste("Top and Bottom 10 Countries in Student-Teacher Ratio"),
+      subtitle = paste("Year:", year),  # Add the year as a subtitle
+      x = "Country",
+      y = "Student-Teacher Ratio"
+    ) +
+    theme_minimal()
+}
+
+# Example usage: Call the function for the year 2012
+create_student_teacher_chart(2012)
+
+```
+
+> Q8.5. Draw all charts for 2012 through 2017 using the function.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# Remove rows with missing student_ratio values
+student_ratio_clean <- na.omit(student_ratio)
+
+# Check the structure of the cleaned data
+summary(student_ratio_clean)
+# Filter the data for 2012
+data_2012 <- student_ratio_clean %>%
+  filter(year == 2012) %>%
+  arrange(desc(student_ratio))
+
+# Get the top and bottom 10 countries
+top_bottom_10 <- bind_rows(
+  head(data_2012, 10),  # Top 10 countries
+  tail(data_2012, 10)   # Bottom 10 countries
+)
+
+# Create a bar chart for 2012
+ggplot(top_bottom_10, aes(x = reorder(country, student_ratio), y = student_ratio, fill = student_ratio > 1)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  labs(
+    title = "Top and Bottom 10 Countries in Student-Teacher Ratio",
+    subtitle = "Year: 2012",
+    x = "Country",
+    y = "Student-Teacher Ratio"
+  ) +
+  theme_minimal()
+
+
+```
+
+# Question 9 
+
+> Q9.0. Read the following data in R and be prepared for analysis.
+
+```{r}
+animal_outcomes <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_outcomes.csv')
+animal_complaints <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/animal_complaints.csv')
+brisbane_complaints <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-21/brisbane_complaints.csv')
+```
+
+> Q9.1. First, briefly take a look at each data set. You will notice that some variables are lower case while others are upper case. You will also notice that some variables are consist of more than one word. 
+
+```{r}
+# View the structure of each dataset to check variables and data types
+str(animal_outcomes)
+str(animal_complaints)
+str(brisbane_complaints)
+
+# View the column names of each dataset to check case and multi-word variable names
+colnames(animal_outcomes)
+colnames(animal_complaints)
+colnames(brisbane_complaints)
+
+```
+> Q9.2. Create a pipeable function that will help you clean up the variable names across the data set, clean them up using the function, and reassign the data sets to the same names to overwrite them.
+
+```{r}
+# Create a function to clean column names
+clean_colnames <- function(df) {
+  colnames(df) <- tolower(gsub(" ", "_", colnames(df)))
+  return(df)
+}
+
+# Clean up the column names in each dataset using the function
+animal_outcomes <- animal_outcomes %>% clean_colnames()
+animal_complaints <- animal_complaints %>% clean_colnames()
+brisbane_complaints <- brisbane_complaints %>% clean_colnames()
+
+# View the updated column names for verification
+colnames(animal_outcomes)
+colnames(animal_complaints)
+colnames(brisbane_complaints)
+```
+
+> Q9.3. Create a pipeable function that can draw a bar chart showing a count of a variable from any of the three data sets above.
+
+```{r}
+# Create a pipeable function to draw a bar chart for a variable
+draw_bar_chart <- function(df, variable) {
+  df %>%
+    count(!!sym(variable)) %>%  # Count occurrences of each unique value in the variable
+    ggplot(aes(x = !!sym(variable), y = n)) +  # Plot the variable on x and count on y
+    geom_bar(stat = "identity") +  # Use identity to plot the count
+    theme_minimal() +  # Clean theme
+    labs(x = variable, y = "Count", title = paste("Count of", variable))  # Labels and title
+}
+
+# Example usage:
+# Drawing a bar chart for 'animal_type' from the animal_outcomes dataset
+draw_bar_chart(animal_outcomes, "animal_type")
+
+# Drawing a bar chart for 'complaint_type' from the animal_complaints dataset
+draw_bar_chart(animal_complaints, "complaint_type")
+
+# Drawing a bar chart for 'category' from the brisbane_complaints dataset
+draw_bar_chart(brisbane_complaints, "category")
+```
+
+> Q9.4. Then, using the function, create two bar charts of your interest from each data set.
+
+```{r}
+# Load the janitor package
+library(janitor)
+
+# Clean column names in all datasets
+animal_outcomes <- animal_outcomes %>% clean_names()
+animal_complaints <- animal_complaints %>% clean_names()
+brisbane_complaints <- brisbane_complaints %>% clean_names()
+
+# Verify the column names to ensure they are cleaned properly
+colnames(animal_outcomes)
+colnames(animal_complaints)
+colnames(brisbane_complaints)
+
+# Drawing two bar charts for animal_outcomes dataset:
+# 1. Count of animal types
+draw_bar_chart(animal_outcomes, "animal_type")
+
+# 2. Count of outcomes
+draw_bar_chart(animal_outcomes, "outcome")
+
+# Drawing two bar charts for animal_complaints dataset:
+# 1. Count of complaint types
+draw_bar_chart(animal_complaints, "complaint_type")
+
+# 2. Count of animal types
+draw_bar_chart(animal_complaints, "animal_type")
+
+# Drawing two bar charts for brisbane_complaints dataset:
+# 1. Count of complaint categories
+draw_bar_chart(brisbane_complaints, "category")
+
+# 2. Count of suburbs
+draw_bar_chart(brisbane_complaints, "suburb")
+
+```
+
+# Question 10 
+
+> In this question, you will work with "airquality" data set, which is built-in data available from R Studio. The goal is to create a function that calculates average Ozone amount for each month. *Hints*: Use nested data. You will have to create multiple functions with one function embedded in another. Also, use one of the map() functions.
+
+```{r}
+# Load necessary libraries
+library(dplyr)
+library(purrr)
+
+# Define the function to calculate average Ozone per month
+calculate_avg_ozone_per_month <- function(data) {
+  # Helper function to calculate average for a specific month
+  calc_avg_ozone <- function(month) {
+    data %>%
+      filter(Month == month) %>%
+      summarise(avg_ozone = mean(Ozone, na.rm = TRUE)) %>%
+      pull(avg_ozone)
+  }
+  
+  # Get unique months (the months are represented by 5 to 9 in the airquality dataset)
+  months <- unique(data$Month)
+  
+  # Use map to apply the helper function to each month
+  avg_ozone_by_month <- map_dbl(months, calc_avg_ozone)
+  
+  # Return results in a tibble
+  tibble(Month = months, Avg_Ozone = avg_ozone_by_month)
+}
+
+# Apply the function on the airquality data
+average_ozone <- calculate_avg_ozone_per_month(airquality)
+print(average_ozone)
+
+```
+

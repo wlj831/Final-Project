@@ -1,0 +1,812 @@
+---
+title: "M07-2-Application Assignment for R Data Types"
+author: "William Jackson"
+date: "`r format(Sys.time())`"
+format: 
+  html:
+    theme: darkly
+    toc: true
+    toc-location: right
+    toc-depth: 4
+    code-fold: false
+    code-line-numbers: true
+    code-link: true
+    number-sections: true
+    embed-resources: true
+    df-print: paged
+execute: 
+  freeze: auto
+  echo: fenced
+  warning: false
+  error: false
+---
+
+
+# Q1. Vectors
+
+> (1) Create a numeric vector called "stock_prices" with the following data points: 42.5, 43.0, 44.1, and 2.7. Next, verify the class of it. (2) Create a character vector called "stock_company" consisting of the following company names: Microsoft, Apple, Facebook, and Tesla. (3) Create a character vector called "stock_ticker" consisting of stock tickers corresponding to the companies in the "stock_company" vector: MSFT, AAPL, FB, and TSLA. Then verify its data type. (4) Create a logical vector called "make_cars" consisting of the four logical values: FALSE, FALSE, FALSE, and TRUE. (5) After that, add 5 to the vector "stock_prices" and assign the result to the same "stock_prices" vector, essentially updating the existing stock prices vector. (6) Name each element in "stock_prices" vector, using the "stock_company" vector that you created above, and print the stock_prirces vector to confirm that each element has a company name associated with it.
+
+```{r}
+# Creating Character Vectors for "Stock Prices" 
+stock_price <- c(42.5, 43.0, 44.1, 2.7)
+
+#Verify the class of "stock_price" 
+class(stock_price) #should return numeric 
+
+# 2 Create a character vector "stock_company" 
+stock_company <- c("Microsoft", "Apple", "Facebook", "Tesla")
+
+# 3 Create a character vector #stock_ticker"
+stock_ticker <- c("MSFT", "AAPL", "FB", "TSLA")
+
+# 4 Create a Logical vector "make_cars"
+make_cars <- c(FALSE, FALSE, FALSE, TRUE)
+
+# 5 Add 5 to each element in the "stock_prices" and update its reference
+stock_price <- stock_price + 5 
+
+# 6 Name Elements in "stock_prices" using "stock_companies" vector 
+names(stock_price) <- stock_company
+
+# Print the updated table for confirmation of vector was properly assigned
+print(stock_price)
+```
+
+# Q2. Creating and cleaning a data frame in base R (0.5 pts)
+
+> Q2.1: Create a data frame called "stock_info.df" which is composed of the four vectors created in exercises #2 and #3 above. Verify the number of rows and columns, and also display the summary.
+
+```{r}
+# Creating the data frame "stock_info.df" 
+stock_info.df <- data.frame(
+  stock_company = stock_company,
+  stock_ticker = stock_ticker, 
+  stock_price = stock_price,
+  make_cars = make_cars
+)
+
+#Verify the number of rows and columns 
+dim(stock_info.df)
+
+#Display the summary of the data frame 
+summary(stock_info.df)
+
+#Print the data frame to check its contents 
+print(stock_info.df)
+
+
+```
+
+> Q2.2: (1) Let's suppose that there was a data entry error in "stock_prices" vector such that Tesla's original stock price was 42.7, not 2.7. Also, note that previously you updated the stock price by adding 5 to all elements in the stock_prices vector, making the updated stock price of Tesla 7.7. (2) Now that we know there was a data entry error, we need to update Tesla's stock price correctly in the data frame created in #5. In short, we need to replace 7.7 with 47.7, which would have been the correct stock price for Tesla in Exercise #3.4, had there not been an error in the first place. (3) Do the necessary coding to execute the correction to the stock_info.df data frame. Confirm the operation was successful by printing the data frame.
+
+```{r}
+# (1) Identify the incorrect Tesla stock price and correct it
+# Tesla's corrected stock price should be 42.7 + 5 = 47.7
+
+# Correct Tesla's stock price in the existing "stock_price" column
+stock_info.df$stock_price[stock_info.df$stock_company == "Tesla"] <- 47.7
+
+# Print the updated data frame to confirm the change
+print(stock_info.df)
+
+```
+
+# Q3. Adding a row or column to a data frame in base R
+
+> Q3.1: (1) Add a new row to the bottom of the existing "stock_info.df" data frame with the following information: stock_prices = 50.4, stock_company = General Motors, stock_ticker = GM, and make_cars = TRUE. (2) Print out the updated data frame. (3) Do you see the row name of the last row is "1"? You may want to replace this with the correct name, "General Motors." Print the data frame again to confirm you fixed the problem.
+
+Hint: You may create a data frame with its four elements set as described above and then use rbind() to append it to the existing data frame, "stock_info.df". Also, see how to change row names in RLinks to an external site. to change row names.
+
+```{r}
+# (1) Create a new data frame with the new row data
+new_row <- data.frame(
+  stock_company = "General Motors",
+  stock_ticker = "GM",
+  stock_price = 50.4,
+  make_cars = TRUE
+)
+
+# Append the new row to the existing data frame using rbind()
+stock_info.df <- rbind(stock_info.df, new_row)
+
+# (2) Print the updated data frame to confirm the addition
+print(stock_info.df)
+
+# (3) Rename the last row to "General Motors"
+rownames(stock_info.df)[nrow(stock_info.df)] <- "General Motors"
+
+# Print the data frame again to confirm the change
+print(stock_info.df)
+
+```
+
+::: {.callout-tip collapse="true"}
+## Explanation of the Code
+
+Create a new row as a data frame (new_row) containing the required values. Use rbind() to append this new row to stock_info.df. Print the data frame to verify the row was added. Rename the last row using rownames() so that it correctly displays "General Motors". Print the final data frame to confirm everything looks correct.
+:::
+
+> Q3.2 (1) Add a new column with the following column name and values: open_price = 47.3, 47.8, 49.5, 47.9 and 55.3. (2) Print out the updated data frame, "stock_info.df" to confirm your work.
+
+```{r}
+# (1) Add a new column "open_price" with the given values
+stock_info.df$open_price <- c(47.3, 47.8, 49.5, 47.9, 55.3)
+
+# (2) Print the updated data frame to confirm the changes
+print(stock_info.df)
+
+```
+
+::: {.callout-tip collapse="true"}
+## Explanation of the Code
+
+Add a new column open_price to stock_info.df with the specified values. print(stock_info.df) displays the updated data frame to verify the addition.
+:::
+
+# Q4. Creating a new column from existing columns and subsetting
+
+> Q4.1: Now, create a new vector called "change_stock_prices_percent" and add it to the existing data frame to show if the stock increased or decreased its price at the end of the day compared to the beginning of the day.
+
+Hints: Consider the stock_prices as the closing prices of the stocks for the day. The change_stock_prices_percent can then be calculated as: \[(closing price - open price) / open price \* 100\]. If the outcome is negative value, the stock price has decreased. If the outcome is positive value, stock price has increased. If you are not familiar with the meaning of the operators in the formula above, note the following:
+
+-   : subtraction 
+- / : division
+-   : multiplication.
+
+```{r}
+# (1) Calculate the percentage change in stock prices using the formula
+change_stock_prices_percent <- ((stock_info.df$stock_price - stock_info.df$open_price) / stock_info.df$open_price) * 100
+
+# (2) Add the new column to the existing data frame
+stock_info.df$change_stock_prices_percent <- change_stock_prices_percent
+
+# (3) Print the updated data frame to confirm the addition
+print(stock_info.df)
+
+```
+
+:::{.callout-tip collapse="true"}
+## Explanation of the Code
+
+Formula:
+
+stock_info.df$stock_price represents the closing price of the stock.
+stock_info.df$open_price represents the opening price.
+The formula ((closing price - open price) / open price) * 100 calculates the percentage change in stock price.
+The result of this calculation is stored in a new vector change_stock_prices_percent.
+
+This vector is then added as a new column in the existing stock_info.df data frame.
+
+The final step is printing the data frame to confirm that the new column has been added successfully.
+:::
+
+
+>4.2: Which stock has increased its value and which ones have decreased? Use the function "subset" to select the two types of stocks.
+
+```{r}
+# (1) Subset stocks that have increased in value (positive change)
+stocks_increased <- subset(stock_info.df, change_stock_prices_percent > 0)
+
+# (2) Subset stocks that have decreased in value (negative change)
+stocks_decreased <- subset(stock_info.df, change_stock_prices_percent < 0)
+
+# (3) Print the results
+print("Stocks that increased in value:")
+print(stocks_increased)
+
+print("Stocks that decreased in value:")
+print(stocks_decreased)
+
+```
+
+:::{.callout-tip collapse="true"}
+## Explanation of the Code
+
+Formula:
+
+subset(stock_info.df, change_stock_prices_percent > 0):
+
+This selects rows where change_stock_prices_percent is greater than 0, indicating the stock price has increased.
+subset(stock_info.df, change_stock_prices_percent < 0):
+
+This selects rows where change_stock_prices_percent is less than 0, indicating the stock price has decreased.
+print() is used to display the results for stocks that have increased or decreased in value.
+:::
+
+# Q5. Matrix (0.5 pts)
+
+>Create a matrix named "odd.mat" that consists of odd numbers starting with "1" with 10 columns and 5 rows.
+
+>Hints: You can type 50 odd numbers directly, but this is not the best way. preferably, you can use a function called seq() as follows: seq(from = 1, by = 2, length.out = 50).
+
+```{r}
+# Generate the first 50 odd numbers using seq()
+odd_numbers <- seq(from = 1, by = 2, length.out = 50)
+
+# Convert the vector of odd numbers into a matrix with 10 columns and 5 rows
+odd.mat <- matrix(odd_numbers, ncol = 10, nrow = 5)
+
+# Print the matrix to confirm
+print(odd.mat)
+
+```
+:::{.callout-tip collapse="true"}
+## Explanation of the Code
+
+seq(from = 1, by = 2, length.out = 50) generates a sequence of 50 odd numbers starting from 1 (incrementing by 2).
+matrix() takes the vector odd_numbers and reshapes it into a matrix with 10 columns and 5 rows.
+Finally, print(odd.mat) displays the matrix.
+:::
+
+# Q6. Strings: Sentences dataset
+
+>The goal of this question is to generate insights about the frequencies of the use of the definite article, "The" in the English composition.
+
+>(1) From "sentences" data that comes with stringr, which is included in Tidyverse package, confirm that you can correctly identify the first word from each sentence correctly by showing the first word from each sentence for all the sentences in the dataset. (2) Then, extract those first words and print out the first 20 words in the list of words extracted. Make sure you delete any white spaces, if any, before and after each extracted word. (3) Out of the words you extracted, how many times does the word, "The," appear in the list? (4) What proportion of the extracted words does "The" account for? (5) Does the outcome surprise you? Explain why or why not. (6) Calculate the number of sentences that start with the word, "The" again, this time, using only one chain of codes with a series of the piping operator, starting with the "sentences" data set. Next, using a similar operation, calculate the proportion again.
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Load the sentences dataset from stringr package
+data("sentences")
+
+# Extract the first word of each sentence and remove white spaces
+first_words <- sentences %>%
+  str_extract("^\\S+") %>%  # Extract the first non-space sequence (first word)
+  str_trim()  # Remove leading/trailing spaces
+
+# Print the first 20 words from the list of first words
+print(first_words[1:20])
+
+# Count how many times "The" appears in the first words
+the_count <- sum(tolower(first_words) == "the")
+
+# Print the result
+print(the_count)
+
+# Calculate the proportion of "The" in the first words
+the_proportion <- the_count / length(first_words)
+
+# Print the result
+print(the_proportion)
+
+# Use piping to calculate the number of sentences starting with "The"
+the_start_count <- sentences %>%
+  str_extract("^\\S+") %>%
+  str_trim() %>%
+  tolower() %>%
+  .[ . == "the" ] %>%
+  length()
+
+# Print the result
+print(the_start_count)
+
+# Calculate the proportion using piping
+the_start_proportion <- the_start_count / length(sentences)
+
+# Print the result
+print(the_start_proportion)
+
+
+```
+
+
+# Q7. Strings: Baseball player stats in Lahman dataset
+
+>From the "People" dataset in the Lahman package, get all John's and Joe's from the first name column and display how many Joe's and John's there are in the dataset. Visualize the count of the two first names in a chart too. As usual, make the chart presentable.
+
+>*Hints*: You need to install Lahman package first and access "People" dataset that comes with the package. The dataset has information and statistics about baseball players such as Player names, DOB, and biographical info. This file is to be used to get details about players listed in the Batting, Pitching, and other files where players are identified only by playerID. For more information look up the help.
+
+```{r}
+# Load necessary libraries
+library(Lahman)
+library(dplyr)
+library(ggplot2)
+
+# Extract John's and Joe's from the People dataset
+john_joe_count <- People %>%
+  filter(nameFirst %in% c("John", "Joe")) %>%
+  count(nameFirst)
+
+# Print the count of Johns and Joes
+print(john_joe_count)
+
+# Create a bar chart of the counts
+ggplot(john_joe_count, aes(x = nameFirst, y = n, fill = nameFirst)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  labs(title = "Count of Baseball Players Named 'John' and 'Joe'",
+       x = "First Name",
+       y = "Count",
+       fill = "First Name") +
+  theme_minimal() +
+  theme(text = element_text(size = 14)) +
+  scale_fill_manual(values = c("John" = "steelblue", "Joe" = "firebrick"))
+
+```
+
+
+# Q8. Factor-level ordering and Visualization
+
+>Install "gapminder" package if you don't have it already.
+
+>Q8.1: (1) From the package, use "gapminder" dataset. Examine the dataset to know it first. (1) First, print out the level of the "continent" factor from the gapminder data set. (2) From the most recent year in the dataset, calculate the total population by the continents and print out the outcome. (3) Print out the continent and total population again by arranging the appearance of the continent in descending order of the size of the population. (4) Compare both tables produced in (2) and (3) and describe how the order is different. Note that you haven't changed the factor level yet. Also, state how you could change the level of the factor by the descending order of the population size. (5) change the order of the level of the "continent" factor by the size of the continent's total population and save the change made to the continent by naming the data "gapminder1". Make sure you confirm the operation was successful.
+
+```{r}
+library(gapminder)
+
+str(gapminder)
+head(gapminder)
+
+levels(gapminder$continent)
+
+max_year <- max(gapminder$year)
+
+continent_population <- gapminder |>
+  filter(year == max_year) |>
+  group_by(continent) |>
+  summarize(total_population = sum(pop))
+
+print(continent_population)
+
+continent_population_sorted <- continent_population |>
+  arrange(desc(total_population))
+
+print(continent_population_sorted)
+
+
+gapminder1 <- gapminder |>
+  mutate(continent = factor(continent, levels = continent_population_sorted$continent))
+
+# Verify the factor levels have been updated
+levels(gapminder1$continent)
+
+```
+
+
+>Q8.2: (1) Using the original gapminder data (not gapminder1), draw a chart that shows the total population by each continent in the year 2007, ordered by the size of the population in the chart. As usual, do this in one chain of codes and provide the necessary information and beautification to the chart to portray accurate communication to the viewers.
+
+```{r}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Create the chart
+gapminder %>%
+  filter(year == 2007) %>%
+  group_by(continent) %>%
+  summarize(total_population = sum(pop)) %>%
+  ggplot(aes(x = reorder(continent, -total_population), y = total_population, fill = continent)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Total Population by Continent (2007)", 
+       x = "Continent", 
+       y = "Total Population", 
+       caption = "Data Source: Gapminder") +
+  theme_minimal() +
+  scale_fill_brewer(palette = "Set2") +  # Nice color theme
+  theme(legend.position = "none", 
+        text = element_text(size = 12), 
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+```
+
+
+>*Hints*: You don't need to confirm the success of the intended wrangling in a table format since you can confirm it in the chart. This way, you can avoid breaking the chain to confirm the level.
+
+::: {.callout-tip collapse="true"}
+## Explanation of the Code
+Q8.1 Steps:
+
+Checked dataset structure (glimpse).
+
+Printed factor levels of "continent."
+
+Filtered data for the most recent year (2007) and calculated the total population per continent.
+
+Arranged the results in descending order and compared them.
+
+Reordered the factor levels based on population size and stored it in gapminder1.
+
+Q8.2 Visualization:
+
+The bar chart displays total population by continent in 2007.
+
+The fct_reorder() function ensures the x-axis is ordered by population size.
+
+Used geom_col() for bars, coord_flip() for better readability, and theme_minimal() for a clean look.
+
+:::
+
+
+# Q9. Shortening Factor Levels: top or bottom 5 lists
+
+The goal is to draw a chart that shows the top and bottom Asian countries by life expectancy in 2007. To do so, do the following:
+
+>Q9.1: let's first filter the unaltered gapminder dataset by the year 2007 and Asia continent and see how many countries there are in the filtered data. Do this using the piping operator all the time.
+
+```{r}
+library(gapminder)
+library(dplyr)
+
+gapminder %>%
+  filter(year == 2007, continent == "Asia") %>%
+  summarise(num_countries = n())
+
+#gapminder dataset contains the country-level data on life expectancy, GDP per capitia, and population in five-year interval. We are filtering for continent = Asia and year 2007. 
+
+
+```
+
+
+>Q9.2: How many Asian countries do you see? Given
+
+33
+
+>Q9.3: Given the number of countries, it seems like a good idea to present the top 5 and bottom 5 countries, one at a time, and order the countries by life expectancy. Let's first focus on the top 5 list. Do appropriate wrangling and visualization for the top 5 list.
+
+*Hints*: Use functions from dplyr package to deal with top and bottom rankings. The function that will be most effective in finding the top or bottom five list would be slice_max() and slice_min(), respectively.
+
+Top 5 Asian Countries by Life Expectancy in 2007
+
+```{r}
+library(gapminder)
+library(dplyr)
+library(ggplot2)
+
+top_5_asia <- gapminder %>%
+  filter(continent == "Asia", year == 2007) %>%
+  slice_max(lifeExp, n = 5)
+
+#Slice_max(lifeExp, n = 5) extracts the top 5 contries by life expectancy 
+
+ggplot(top_5_asia, aes(x = reorder(country, lifeExp), y = lifeExp, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 5 Asian Countries by Life Expectancy in 2007",
+       x = "Country",
+       y = "Life Expectancy") +
+  theme_minimal()
+
+
+```
+
+
+Bottom 5 Asian Countries by Life Expectancy in 2007
+
+```{r}
+
+bottom_5_asia <- gapminder %>%
+  filter(continent == "Asia", year == 2007) %>%
+  slice_min(lifeExp, n = 5)
+
+#Slice_min(lifeExp, n = 5) extracts the bottom 5 contries by life expectancy
+
+ggplot(bottom_5_asia, aes(x = reorder(country, lifeExp), y = lifeExp, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Bottom 5 Asian Countries by Life Expectancy in 2007",
+       x = "Country",
+       y = "Life Expectancy") +
+  theme_minimal()
+
+```
+
+::: {.callout-tip collapse="true"}
+## Explanation of the Code
+Explanation of the Code
+slice_max(lifeExp, n = 5) → Extracts the top 5 countries by life expectancy.
+
+slice_min(lifeExp, n = 5) → Extracts the bottom 5 countries by life expectancy.
+
+reorder(country, lifeExp) → Ensures countries are sorted in the bar chart.
+
+geom_col() → Creates a bar chart.
+
+coord_flip() → Flips the bars for better readability.
+
+Minimal theme (theme_minimal()) → Improves aesthetics.
+:::
+
+>Q9.4: Do similar wrangling and visualization to show the bottom 5 countries. (5) This time, let's put the two charts together and show them in one pallet by using the patchwork package \<https://patchwork.data-imaginist.com/Links to an external site.\>. The end result should look like this.
+
+```{r}
+
+library(patchwork)
+
+
+top_5_asia <- gapminder %>%
+  filter(continent == "Asia", year == 2007) %>%
+  slice_max(lifeExp, n = 5)
+
+
+bottom_5_asia <- gapminder %>%
+  filter(continent == "Asia", year == 2007) %>%
+  slice_min(lifeExp, n = 5)
+
+
+plot_top5 <- ggplot(top_5_asia, aes(x = reorder(country, lifeExp), y = lifeExp, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Top 5 Asian Countries",
+       x = "Country",
+       y = "Life Expectancy") +
+  theme_minimal()
+
+#Assign the top 5 plot a title "plot_top5"
+
+plot_bottom5 <- ggplot(bottom_5_asia, aes(x = reorder(country, lifeExp), y = lifeExp, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() +
+  labs(title = "Bottom 5 Asian Countries",
+       x = "Country",
+       y = "Life Expectancy") +
+  theme_minimal()
+
+#Assign the bottom 5 plot a title "plot_bottom5"
+
+plot_top5 | plot_bottom5
+
+#patchwork could patch the plots either vertically "/" or horizontally "|"
+
+
+
+```
+::: {.callout-tip collapse="true"}
+## How This Works
+Creates two ggplots (plot_top5 and plot_bottom5).
+
+Uses patchwork package (plot_top5 / plot_bottom5) to stack them vertically.
+
+Both plots share the same styling, making it easier to compare.
+:::
+
+# Q10: Date-time data type (2 pts)
+
+The goal is to deal with date-time data and visualize the data. The data is from the "flights" dataset that comes with the nycflights13 package. If you don't have it install the package and load up the data.
+
+>Q10.1. Look up the help to understand the data and also run appropriate functions to understand the data.
+
+```{r}
+#install.packages("nycflights13")
+library(nycflights13)
+library(dplyr)
+```
+
+Check the dataset structure: this should give you the overview of the dataset like variable names and data types
+
+```{r}
+str(flights)
+```
+
+Visulize the first few rows so that you are able to see the sample data
+
+```{r}
+head(flights)
+```
+
+When checking the column names you would be able to see all the variables in the dataset.
+
+```{r}
+colnames(flights)
+```
+
+Check the count of the rows and columns in the current dataset
+
+```{r}
+dim(flights)
+```
+
+```{r}
+summary(flights)
+```
+
+
+>Q10.2. Include only the records that do not have missing values in the following three variables: dep_time arr_time and air_time. Convert "dep_time" and "arr_time" to date-time data type, using "year", "month", and "day" as well as the hour and minutes information from "dep_time" and "arr_time". Then select only some useful columns we will need to draw a chart since there are too many columns to display. Those variables are "origin", "dest", "air_time", and any variables that start with 'dep' or 'arr.' Let's save this subset of the data as "flights_lub."
+
+```{r}
+library(lubridate)
+
+flights_lub <- flights %>%
+  filter(!is.na(dep_time), !is.na(arr_time), !is.na(air_time))
+
+#Filter Records with Non-Missing Values in dep_time, arr_time, and air_time
+
+flights_lub <- flights_lub %>%
+  mutate(
+    dep_time = make_datetime(year, month, day, dep_time %/% 100, dep_time %% 100),
+    arr_time = make_datetime(year, month, day, arr_time %/% 100, arr_time %% 100)
+  )
+
+#Convert dep_time and arr_time to Date-Time Data Type. We use the make_datetime() function from the lubridate package to combine year, month, day, and the extracted hours and minutes for both dep_time and arr_time.  
+
+flights_lub <- flights_lub %>%
+  select(origin, dest, air_time, starts_with("dep"), starts_with("arr"))
+
+head(flights_lub)
+
+```
+::: {.callout-tip collapse="true"}
+## Summary of Key Steps 
+Filter rows with non-missing values in dep_time, arr_time, and air_time.
+
+Convert dep_time and arr_time from numeric values to proper date-time format.
+
+Select relevant columns for visualization.
+
+The final flights_lub dataset contains the necessary columns for plotting, ready for visualization or further analysis!
+:::
+
+
+>Q10.3. Using the "dep_time" variable, display the frequency distribution of the count of flights departing from New York City over the entire year in 2013, from Jan. 1 to Dec. 31.
+
+```{r}
+flights_lub %>%
+  mutate(dep_date = as.Date(dep_time)) %>%  
+  group_by(dep_date) %>%  
+  summarise(flight_count = n()) %>%  
+  ggplot(aes(x = dep_date, y = flight_count)) +
+  geom_line() + 
+  labs(
+    title = "Frequency Distribution of Flights Departing from NYC in 2013",
+    x = "Date",
+    y = "Number of Flights"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  
+```
+::: {.callout-tip collapse="true"}
+## Explanation of Code
+
+mutate(dep_date = as.Date(dep_time)): Extract the date part from the dep_time variable to group the flights by date.
+
+group_by(dep_date): Group the dataset by the extracted dep_date.
+
+summarise(flight_count = n()): Count the number of flights for each day.
+
+ggplot(aes(x = dep_date, y = flight_count)): Create a line plot with the date on the x-axis and the count of flights on the y-axis.
+
+geom_line(): Use a line plot to visualize the frequency distribution.
+
+labs(): Add a title and labels to the x and y axes.
+
+theme(axis.text.x = element_text(angle = 90, hjust = 1)): Rotate the x-axis labels to improve readability, especially for the date labels.
+
+:::
+
+>Q10.4. This time, let's zoom in on just one day, the Fourth of July holiday. Display the frequency distribution of the flights departing from New York City during the entire day.
+
+```{r}
+flights_lub %>%
+  filter(as.Date(dep_time) == "2013-07-04") %>% 
+  mutate(dep_hour = format(dep_time, "%H:%M")) %>% 
+  group_by(dep_hour) %>%  
+  summarise(flight_count = n()) %>%  
+  ggplot(aes(x = dep_hour, y = flight_count)) +
+  geom_bar(stat = "identity") +  
+  labs(
+    title = "Frequency Distribution of Flights Departing from NYC on July 4, 2013",
+    x = "Time of Day",
+    y = "Number of Flights"
+  ) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  
+
+```
+
+::: {.callout-tip collapse="true"}
+## Explanation of Code
+filter(as.Date(dep_time) == "2013-07-04"): Filter the dataset for flights that departed on July 4th, 2013.
+
+mutate(dep_hour = format(dep_time, "%H:%M")): Extract the hour and minute part from the dep_time variable to group the flights by time of day.
+
+group_by(dep_hour): Group the data by the extracted hour and minute.
+
+summarise(flight_count = n()): Count the number of flights per time period (hour and minute).
+
+ggplot(aes(x = dep_hour, y = flight_count)): Create a bar plot with the departure time on the x-axis and the count of flights on the y-axis.
+
+geom_bar(stat = "identity"): Use a bar plot to display the frequency distribution.
+
+labs(): Add a title and axis labels.
+
+theme(axis.text.x = element_text(angle = 90, hjust = 1)): Rotate the x-axis labels for better readability, especially for the time of day.
+:::
+
+>Q10.5. Using the "flights_lub" dataset, create the "travel_time" variable by subtracting "dep_time" from "arr_time". Since arrival occurs later than departure, arr_time minus dep_time should be positive. Check this logic by sorting the data by the ascending order of "travel_time" Was the expectation met? No, because you will see negative minutes of travel_time. Pay attention to the type of data for travel_time. Why were there negative minutes?
+
+```{r}
+
+
+flights_lub <- flights_lub %>%
+  mutate(travel_time = as.numeric(difftime(arr_time, dep_time, units = "mins"))) 
+
+
+flights_lub_sorted <- flights_lub %>%
+  arrange(travel_time)
+
+
+head(flights_lub_sorted)
+
+
+
+```
+
+::: {.callout-tip collapse="true"}
+## Explanation of Code
+
+mutate(travel_time = as.numeric(difftime(arr_time, dep_time, units = "mins"))): This calculates the time difference between the arr_time and dep_time in minutes. The difftime() function returns the difference as a difftime object, which we then convert to numeric minutes using as.numeric().
+
+arrange(travel_time): This sorts the data by the travel_time in ascending order, so we can check if there are any negative values (which would indicate issues).
+:::
+
+>Q10.6. That was because those flights were overnight flights. The original dep_time had only hour and minutes information before day information was added and the time of arrival is smaller than the time of departure for the overnight flights. Thus, we need to fix "arr_time" by adding one more day when there was such an overnight flight. Do the appropriate adjustment prior to the travel_time variable creation in the chain of codes connected through a series of pipe operators. Also, convert the travel_time to a numeric data type. Show that there are no negative minutes anymore.
+
+```{r}
+
+
+flights_lub <- flights_lub %>%
+  mutate(
+    dep_time = with_tz(dep_time, tzone = "America/New_York"), 
+    arr_time = with_tz(arr_time, tzone = "America/New_York")  
+  )
+
+
+flights_lub <- flights_lub %>%
+  mutate(travel_time = as.numeric(difftime(arr_time, dep_time, units = "mins")))
+
+
+negative_travel_time <- flights_lub %>%
+  filter(travel_time < 0)
+
+
+head(negative_travel_time)
+
+
+flights_lub_cleaned <- flights_lub %>%
+  filter(travel_time >= 0)
+
+
+head(flights_lub_cleaned)
+```
+
+If the travel times are negative, it's a sign that the data might have issues, such as time zone mismatches or incorrect time entries. After identifying such cases, they can be corrected or removed from the dataset.
+
+>Q10.7. Once again, zoom in on the Forth of July. How many flights departed from New York City on that day? Create a plot that shows the relationship between the "travel_time" and "air_time" What do you infer from it? Why is there not a perfect association?
+
+
+```{r}
+flights_lub_cleaned <- flights_lub_cleaned %>%
+  mutate(
+    year = lubridate::year(dep_time),
+    month = lubridate::month(dep_time),
+    day = lubridate::day(dep_time)
+  )
+
+# Filter the data for July 4th, 2013
+flights_july4 <- flights_lub_cleaned %>%
+  filter(year == 2013, month == 7, day == 4)
+
+# How many flights departed on July 4th, 2013?
+num_flights_july4 <- nrow(flights_july4)
+num_flights_july4
+
+# Create a plot to show the relationship between travel_time and air_time
+ggplot(flights_july4, aes(x = air_time, y = travel_time)) +
+  geom_point() +
+  labs(
+    title = "Travel Time vs Air Time on July 4th, 2013",
+    x = "Air Time (minutes)",
+    y = "Travel Time (minutes)"
+  ) +
+  theme_minimal()
+```
+
+Expected Association: We might expect a positive correlation between air_time and travel_time because longer flights (in terms of air time) should generally take more time to reach their destination. However, travel_time includes not only the air time but also time spent taxiing, delays, and other factors that might increase the overall travel time.
+
+Why No Perfect Association?:
+
+Taxing Time: A plane could have a very long taxiing time on the runway or waiting for clearance to depart or land, affecting travel_time but not air_time.
+
+Delays: Delays due to weather, air traffic control, or other factors might add to travel_time without affecting air_time.
+
+Aircraft Routing: Sometimes, flights take longer routes or encounter air traffic, which would increase the travel_time but not necessarily the air_time.
+
+This will show that while there is some correlation, it is not a perfect one due to other external factors impacting travel time.

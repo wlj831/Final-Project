@@ -1,0 +1,17 @@
+{
+  "hash": "05d100ff98bb6e6d888c5992ad84d620",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\nname: William\nsurname: Jackson\nposition: \"QA Operations Specialist II\"\nphone: +1 (805) 832-0842\nwww: yourwebsite.com\nemail: \"williamlloydjackson@gmail.com\"\ngithub: your-github\nlinkedin: your-linkedin\ndate: \"May 2025\"\noutput: \n  vitae::latexcv:\n    theme: classic\nheader-includes:\n   - \\usepackage{enumitem}\n   - \\setlist[itemize]{nosep, left=0pt}\n   - \\setlist[enumerate]{nosep, left=0pt}\n---\n\n\n\n\n\n\n# Objective\n\nUtilize my knowledge obtained in my bachelor’s degree of biology to work in the pharmaceutical and biotechnology industries. My industry and educational experiences have been focused in the following areas: manufacturing, quality control/assurance, implementation of GMP regulated SOPs, environmental monitoring, chemical analysis, genetic isolation of microbial DNA, and industry experience in an FDA regulated environment. These skills will allow me to be an optimal asset to any pharmaceutical or biotechnology company.  \n\n# Technical Skills\n\n-   **Programming Languages:** R and Python \n-   **Web Technologies:** HTML, CSS/SCSS, Quarto \n\n# Education\n\n\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 2 × 5\n  what                     when                            with      where why  \n  <chr>                    <chr>                           <chr>     <chr> <lis>\n1 Master of Business Admin 2023 – Expected Graduation 2025 Business… Cal … <chr>\n2 Bachelor of Biology      2012 – 2017                     Biologic… CSUN  <chr>\n```\n\n\n:::\n:::\n\n\n\n\n# Work Experience\n\n\n\n\n::: {.cell}\n::: {.cell-output .cell-output-stdout}\n\n```\n# A tibble: 2 × 5\n  what                        when                  with            where why   \n  <chr>                       <chr>                 <chr>           <chr> <list>\n1 QA Operations Specialist II May 2022 – Present    Kite Pharmaceu… <NA>  <list>\n2 QA Specialist               March 2021 – May 2022 Gilead Sciences <NA>  <list>\n```\n\n\n:::\n:::\n",
+    "supporting": [
+      "Resume_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

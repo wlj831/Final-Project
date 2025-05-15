@@ -1,0 +1,629 @@
+---
+title: "M05-2-Application: Data Wrangling with Tidyverse in R"
+author: "William Jackson"
+date: '`r format(Sys.time())`'
+format: 
+  html: 
+    toc: true
+    toc-depth: 4
+    theme: sandstone
+    number-sections: true
+    code-line-numbers: true
+    code-fold: false
+    code-link: true
+    embed-resources: true
+editor: visual
+execute: 
+  freeze: auto
+  warning: false
+  error: true
+---
+
+# Ex 1.
+
+## Now, using the Tidyverse library, set the built-in "airquality" dataset to a tibble format named, "air.tib." Confirm that the operation was successful. Next, create a new data frame from "air.tib" and assign "air.df" to the data frame. Confirm that the operation was successful.
+
+```{r}
+# load the tidyverse library
+library(tidyverse)
+
+#convert the built-in "airquality" dataset to a tibble
+
+air.tib <- as_tibble(airquality)
+
+#confirm the operation was successful 
+print(air.tib)
+
+# Convert air.tib back to data frame 
+air.df <- as.data.frame(air.tib)
+
+#confirm the operation was successful 
+print(air.df [1:20, ])
+
+```
+
+## Using the tibble you created earlier, find the Ozone amount when the temperature was 97. Show this by both subsetting the entire row and pinpointing the Ozone element only. Also, for both ways, use Base R approach as well as Tidyverse approach.
+
+```{r}
+# Base R Approach 
+air.tib[air.tib$Temp == 97, ]
+
+# Extract Only the Ozone Value 
+air.tib$Ozone[air.tib$Temp == 97]
+
+```
+
+```{r}
+# Tidyverse Approach 
+
+#load dplyr library 
+library(dplyr)
+
+#Subset the Entire Row Where Temp == 97
+
+air.tib %>% filter(Temp == 97)
+
+# Extract only the ozone value 
+
+air.tib %>% filter(Temp == 97) %>% pull(Ozone)
+
+```
+
+# Ex 2.
+
+Use "flights" data for this exercise.
+
+## Select only the top 10 worst arrival delays for each day for each month for each year. Using the subset of the data, calculate the average delay for each month regardless of the dates or years. Hints: you will want to group the data by year, month, and day. Then, you will want to ungroup the data to remove the groupings and do another grouping to calculate means by month.
+
+```{r}
+#load the library nycflights and library dplyr
+library(nycflights13)
+library(dplyr)
+
+# load the flights dataset 
+data("flights")
+
+```
+
+```{r}
+# Select the top 10 worst arrival delays for each day 
+
+top_delays <- flights %>%
+  group_by(year, month, day) %>% #group by year month and day 
+  slice_max(arr_delay, n=10, with_ties = FALSE) %>% # select the top 10 worst days 
+  ungroup() #remove group for next step
+
+```
+
+```{r}
+avg_monthly_delay<- top_delays %>%
+  group_by(month) %>% # group by month only
+  summarise(avg_arr_delay = mean(arr_delay, na.rm = TRUE)) #Calculate Avg 
+
+# Print the results in minutes
+print(avg_monthly_delay)
+```
+
+## Visualize the data that shows average delays each month. Style the chart appropriately, as you learned in the previous modules, to make the chart presentable.
+
+```{r}
+ggplot(avg_monthly_delay, aes(x = factor(month), y = avg_arr_delay, fill = factor(month))) +
+  geom_col(show.legend = FALSE) +  
+  labs(
+    title = "Average Arrival Delay per Month (Top 10 Worst Delays Each Day)",
+    x = "Month",
+    y = "Average Arrival Delay (minutes)",
+    caption = "Data Source: nycflights13"
+  ) +
+  theme_minimal() +  
+  scale_fill_viridis_d(option = "inferno") +  # Better color scale for >9 categories
+  theme(
+    plot.title = element_text(size = 12, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
+
+```
+
+## Describe what you learned from the data about delays. Since this is an important insight, you will want the audience to pay attention and style the description of insights using appropriate Quarto document features.
+
+::: {.callout-tip collapse="true"}
+## Response
+
+Based upon the presentation of the data, it appears that the highest months for travel include June, July, and December. This inherently makes sense as these are the most common months to travel for both families and individuals. Most of summer months are common times in which families or individuals will go on their annual vacations, so we see higher delays during these months to more travelers. In December, we see higher delays due to the fact that people are traveling to family for Christmas and New Years. The presentation of the bar graph is simple and gives insight to the most commonly experienced months in which a delay was experienced.
+:::
+
+# Ex 3.
+
+The final goal of this exercise is to visualize the data. To do so, you will want to understand the data and determine the kind of relationship you would like to visualize. Next you will want to wrangle data to support the visualization objective. In the following sub-questions, you will be asked a step-by-step process. Organize well in your Quarto Markdown by showing sub-question numbers: 3.1, 3.2, 3.3, 3.4, and 3.5 right above each code chunk, except for 3.3. Note that the 3.3 activity doesn't require coding, but you need to provide your answer as text in the text area, not inside the code chunk. This is because When your response is longer than one line inside the code chunk, the response will go out of the boundary of the chunk highlight when knitted.
+
+## Take a look at the built-in data frame "relig_income" from tidyr package, which is one of the packages included in the mega package called the Tidyverse package. Since you already loaded it up with the package earlier, the data set should show up when you type it. Perform some built-in functions that will help you understand the data -- type of data, size, missing value, variables, etc. What can you tell about the data set?
+
+```{r}
+# Check the dataset 
+head(relig_income)
+
+# check the structure 
+str(relig_income)
+
+# summary of data 
+summary(relig_income)
+
+# missing values 
+sum(is.na(relig_income))
+
+# dimensions of dataset 
+dim(relig_income)
+
+# check column names 
+colnames(relig_income)
+
+# view the table 
+print(relig_income)
+```
+
+## It is a tibble data format with 18 rows and 11 variables. To learn more about this data, look it up in help. Type the code to do so.
+
+```{r}
+help("relig_income")
+
+```
+
+> Hint: use help() function. What does it tell you about the data and variables? Make sure you type your responses outside below the cord chunk.
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The function provides documentation on the data set, explaining what it represents, the source of the data, and its structure. The variables will also be present in the data set and will include the names, types and meanings. With usage the file can help show you examples of how to use the data in analysis or how to access variables within the data set.
+:::
+
+## Now, go back to the data. Think about the relationships among the variables you want to visualize. One potential idea is to show what the frequency (count) of income brackets look like by the religion people practice. Does the current data allow you to support your goal? Why or why not. If the data doesn't support the goal, how should the data be reshaped to support the goal?
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+
+# Reshape the data to long format
+relig_income_long <- relig_income %>%
+  pivot_longer(cols = -religion, names_to = "income_bracket", values_to = "count")
+
+```
+
+> Hint: In your response, consider the conditions for tidy data and if the current data is tidy. Data is tidy when (1) observations in the rows are unique, (2) variables in the columns are consistent and unique so that we can perform statistics that are interpretable.
+
+## Reshape the data. Further, draw a plot that shows income distribution by religion. Do all the necessary operations to make the chart visualize the tidied data well.
+
+```{r}
+# Create the plot
+ggplot(relig_income_long, aes(x = income_bracket, y = count, fill = religion)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = "Income Bracket Distribution by Religion",
+       x = "Income Bracket",
+       y = "Count") +
+  theme_minimal()
+```
+
+> Hint: Successful data should have four columns: "religion", "income", and "count". Assign "relig_income_longer" to the tydy data and print it out. The column "Don't know/refused" can be deleted if you wish.
+
+## Next, redo 3.4 using one long chain of codes from the first step to the last that spans the whole data wrangling and visualization.
+
+```{r}
+library(tidyverse)
+
+# Perform the entire data wrangling and visualization in one long chain
+ggplot(relig_income %>%
+         pivot_longer(cols = -religion, names_to = "income_bracket", values_to = "count"), 
+       aes(x = income_bracket, y = count, fill = religion)) +
+  geom_bar(stat = "identity", position = "stack") +  # Stacked bar chart
+  labs(title = "Income Distribution by Religion",
+       x = "Income Bracket",
+       y = "Count") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels
+
+```
+
+# Ex 4.
+
+Just like Question 3, the goal is to visualize the data and do the appropriate wrangling needed to support the goal. First, understand the data and think about what kinds of relationships would be most interesting to show in visualization given the data. If the data is not in ideal shape to support your visualization goal, do all the wrangling needed to support your goal. Organize your codebook well by showing sub-question numbers: 4.1, 4.2, 4.3, 4.4, and 4.5. Note that the 4.3 activity doesn't require coding, so you should provide your answer in the text area.
+
+## Take a look at the built-in data frame "us_rent_income" from tidyr package, which is one of the packages included in the mega package called Tidyverse package. Since you already loaded it up with the package earlier, the data set should show up when you type it. Perform some built-in functions that will help you understand the data -- type of data, size, missing value, variables, etc. What can you tell about the data set?
+
+```{r}
+# View the first few rows of the data
+head(us_rent_income)
+
+# Check the structure of the data (types of data in each column)
+str(us_rent_income)
+
+# Get the dimensions of the data (rows and columns)
+dim(us_rent_income)
+
+# Get summary statistics of the dataset
+summary(us_rent_income)
+
+# Check for missing values
+sum(is.na(us_rent_income))
+
+#Entire Dataset 
+print(us_rent_income)
+
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The data set is rent and income statistics in the US. The summary range gives me an overview of all of the data provided from the online source. Print function allows me to see the entirity of the data so that all data can be reviewed. The sum is.na function allowed me to skim the data to finding missing variables. Based upon this review, there are 2 missing variables throughout the data set. I will either delete the missing data or take the averages.
+:::
+
+4.2. You will see five variables: GEOID, NAME, variable, estimate, and moe. To understand the data, type a code that will show you the description of the data in the help. Then read the description of the variables. What does it tell you about the data and variables? What does each variable mean? Make sure you type your responses outside below the cord chunk.
+
+```{r}
+#help function to review source and information that is in the data set 
+help(us_rent_income)
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The help function allows for me to review the data in more conceptual aspect. It gives me the source of that (how it was collected), the variables measured in the data, and the index that it was collected in the tidyr package. The variables are as follows: GEOID - the unique identifier for geographic region, NAME - the name of the geographic region (state name), Variable - the variable income such as yearly income and monthly rent, estimate - the actual or estimated value of interest, and moe - margin of error, which is the uncertainty in the estimate (90%).
+:::
+
+## Now, go back to the data. Think about the relationships among the variables you want to visualize. One potential idea is to show the relationship between income and rent across the states. Ask yourself if the current data shape supports your visualization goal. Why or why not? If the data doesn't support the goal, how should the data be reshaped to support the goal?
+
+> Hints: In your response, consider the conditions for tidy data and if the current data is tidy. Data is tidy when (1) observations in the rows are unique, (2) variables in the columns are consistent and unique so that we can perform statistics that are interpretable.
+
+```{r}
+# Reshape the data so that 'variable' values become separate columns
+us_rent_income_tidy <- us_rent_income %>%
+  pivot_wider(names_from = variable, values_from = estimate)
+
+# View the transformed dataset
+head(us_rent_income_tidy)
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The data set is now more properly organized to look at the relationship between the location, income, and rent. This structure will allow for easy of visualization between the annual income and the rent associated with geographic regions. This data can now be presented in a scatter plot to give a better understanding of the relationship between income and rent.
+:::
+
+4.4. Reshape the data. Further, draw a plot that shows the relationship between the income and rent across the states. Do all the necessary operations to make the chart visualize the tidied data well.
+
+> Hint: The successful data will have six columns: "GEOID", "NAME", "estimate_income", "estimate_rent", "moe_income", and "moe_rent." Assign "us_rent_income_wider" to the tydy data and print it out. whereas "names_from" argument has one variable -- "variable", "values_from" argument has two variables -- "estimate" and "moe." Multiple variables can be combined with c() function like this: c(estimate, moe).
+
+```{r}
+# Reshape the data
+us_rent_income_wider <- us_rent_income %>%
+  pivot_wider(
+    names_from = variable,
+    values_from = c(estimate, moe)
+  )
+
+# Print the transformed dataset
+print(us_rent_income_wider)
+
+# Scatter plot of Income vs. Rent
+ggplot(us_rent_income_wider, aes(x = estimate_income, y = estimate_rent)) +
+  geom_point(color = "blue", size = 3, alpha = 0.7) +  # Blue points for visibility
+  geom_smooth(method = "lm", se = FALSE, color = "red") +  # Linear regression line
+  labs(
+    title = "Relationship Between Income and Rent Across States",
+    x = "Estimated Income ($)",
+    y = "Estimated Rent ($)",
+    caption = "Data Source: tidyr::us_rent_income"
+  ) +
+  theme_minimal() +  # Clean and modern theme
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text = element_text(size = 12),
+    axis.title = element_text(size = 14)
+  )
+
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The scatter plot is useful in determining the relationship between the annual rent and the monthly rent. There appears to be a high correlation between the values and it is likely that rental prices will increase as income is higher.
+:::
+
+# Ex 5.
+
+Run this code below:
+
+```{r}
+mba <- data.frame(player=c('A', 'A', 'B', 'B', 'C', 'C'),
+                  year=c(1, 2, 1, 2, 1, 2),
+                  stats=c('22/2/3', '29/3/4', '18/6/7', '11/1/2', '12/1/1',                                   '19/2/4'))
+                  
+```
+
+## Next, separate the number of the stats column into "points," "assists," and "steals." Assign this data frame to a new name, "mba_sep". Print out the data set.
+
+```{r}
+# Separate the stats column into points, assists, and steals
+mba_sep <- mba %>%
+  separate(stats, into = c("points", "assists", "steals"), sep = "/")
+
+# Print the transformed dataset
+print(mba_sep)
+```
+
+## Reverse the last question by uniting three columns -- points, assists and steals -- into one column. Assign "mba_uni" to the data frame. Then confirm the work by printing it out on the screen.
+
+```{r}
+# Unite the three columns back into one
+mba_uni <- mba_sep %>%
+  unite(stats, points, assists, steals, sep = "/")
+
+# Print the transformed dataset
+print(mba_uni)
+
+```
+
+# Ex 6.
+
+Use the "flights" data.
+
+## Filter the data by including only the flights that were not canceled. For each day, calculate the first and last departure times from NYC airport. Then, for each month, select one day such that the first flight departure was the latest for the month. Do the necessary wrangling and show the results in descending order of "first departure time" in a table using the `gt`/`gtExtras.`
+
+> Hints: You can use group_by() and summarize(), filter(), ungroup(), and arrange() functions. In the end, you should have 12 rows of data frame consisting of columns such as year, month, day, first_dep, last_dep, and n.
+
+```{r}
+# load the gt/gtextras function 
+library(gt)
+library(gtExtras)
+
+# Filter out canceled flights (i.e., keep only flights with non-missing departure times)
+flights_filtered <- flights %>%
+  filter(!is.na(dep_time))
+
+# Calculate first and last departure times for each day
+daily_departures <- flights_filtered %>%
+  group_by(year, month, day) %>%
+  summarize(
+    first_dep = min(dep_time, na.rm = TRUE),
+    last_dep = max(dep_time, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+# Select the day in each month with the latest "first departure"
+latest_first_dep_per_month <- daily_departures %>%
+  group_by(year, month) %>%
+  slice_max(first_dep, n = 1) %>% # Select the row with the maximum first_dep in each month
+  ungroup() %>%
+  arrange(desc(first_dep))  # Arrange in descending order
+
+# Display results using gt
+latest_first_dep_per_month %>%
+  gt() %>%
+  tab_header(
+    title = "Latest First Departure per Month",
+    subtitle = "NYC Flights (Non-Canceled Flights Only)"
+  ) %>%
+  fmt_time(columns = c(first_dep, last_dep), time_style = "hms") %>%
+  cols_label(
+    year = "Year",
+    month = "Month",
+    day = "Day",
+    first_dep = "First Departure",
+    last_dep = "Last Departure"
+  ) %>%
+  tab_options(
+    table.font.size = 14,
+    heading.title.font.size = 18,
+    heading.subtitle.font.size = 14
+  )
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+Yes, it orders the table in order with first departure of each month. This gives us an interesting order of the data that can be helpful in interpretation.
+:::
+
+## Wrangle the data to find out the top 5 destinations to which carriers flew the most. Print the data in a nice table. Does the finding make sense; discuss the outcome.
+
+```{r}
+# Find the top 5 destinations with the most flights
+top_5_destinations <- flights %>%
+  filter(!is.na(dest)) %>%  # Ensure no missing destination values
+  count(dest, sort = TRUE) %>%  # Count flights per destination
+  top_n(5, n)  # Select the top 5 destinations
+
+# Display results in a formatted table using gt
+top_5_destinations %>%
+  gt() %>%
+  tab_header(
+    title = "Top 5 Flight Destinations",
+    subtitle = "Most Frequent Destinations from NYC (2013)"
+  ) %>%
+  cols_label(
+    dest = "Destination Airport",
+    n = "Total Flights"
+  ) %>%
+  tab_options(
+    table.font.size = px(14),
+    heading.title.font.size = px(18),
+    heading.subtitle.font.size = px(14)
+  )
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+The findings of the most traveled to airports in the US is not extremely unusual. We see that there is common travel to Los Angeles, Chicago, Boston, and Orlando. Out of the major cities, it would only appear unusual that Boston and Orlando are on the list, but it is likely that these airports are either layovers for the cities or central airports for air traffic. Specifically, anyone flying into Boston likely has a layover in NYC, and anyone flying to the south eastern US has a layover in Orlando airport. If these are true, that would suggest that the data is accurate. With LA, Chicago, and Atlanta; these cities are large metros that have a lot of economic movement so there is no surprise there. You could even say that Atlanta is a major airport hub for layovers similar to Dallas and Orlando.
+:::
+
+# Ex 7.
+
+## Using the data frame "air.tib," find out how many missing values exist in the column "Solar.R and what percent of the record the missing values account for". In doing so, try Tidyverse way of coding. Next, create a variable called "Solar_Mean" and assign the mean of the column "Solar.R" to it. Finally, replace all the missing values in the column "Solar.R" with "Soar_Mean". Confirm that there are no more missing values in this column.
+
+```{r}
+# Count missing values and calculate percentage
+missing_count <- air.tib %>%
+  summarise(missing = sum(is.na(Solar.R)),
+            total = n(),
+            percent_missing = (missing / total) * 100)
+
+# Print missing value count and percentage
+print(missing_count)
+
+# Compute mean of Solar.R excluding NAs
+Solar_Mean <- air.tib %>%
+  summarise(Solar_Mean = mean(Solar.R, na.rm = TRUE)) %>%
+  pull(Solar_Mean)
+
+# Replace missing values in Solar.R with the computed mean
+air.tib <- air.tib %>%
+  mutate(Solar.R = ifelse(is.na(Solar.R), Solar_Mean, Solar.R))
+
+# Confirm that there are no more missing values
+missing_check <- sum(is.na(air.tib$Solar.R))
+print(paste("Missing values in Solar.R after replacement:", missing_check))
+
+```
+
+# Ex 8.
+
+## Use the air.tib data frame. Here, the goal is to visualize the monthly total temperature (silly?) with a barplot with the Month on the y-axis and the total temperature on the x-axis. To do so, do the appropriate wrangling and visualization in one chain of codes. To do so, do the following.
+
+1.  To create the total monthly temperature, count the number of months weighted by Temp.
+2.  Change Month's data from numeric value to associated character: from 5 to "May", 6 to "June", 7 to "July", 8 to "August", and 9 to "September".
+3.  Convert Month to a factor.
+4.  Reorder Month by the size of the total temperature in descending order.
+
+After you transformed the data s above in two columns -- Month and n, you can visualize the table in a barplot. As usual, do the necessary beautification of the chart to make it presentable to the audience. There are at least two ways to wrangle to get the same outcome. If you can do both, you will get a bonus point.
+
+```{r}
+# Wrangle the data and visualize it in one chain
+air.tib %>%
+  # 1. Calculate total temperature by month
+  group_by(Month) %>%
+  summarise(total_temp = sum(Temp, na.rm = TRUE)) %>%
+  # 2. Change Month from numeric to character
+  mutate(Month = recode(Month, `5` = "May", `6` = "June", `7` = "July", `8` = "August", `9` = "September")) %>%
+  # 3. Convert Month to factor
+  mutate(Month = factor(Month, levels = c("May", "June", "July", "August", "September"))) %>%
+  # 4. Reorder Month by total temperature in descending order
+  arrange(desc(total_temp)) %>%
+  # 5. Visualize using a barplot
+  ggplot(aes(x = total_temp, y = reorder(Month, total_temp), fill = Month)) +
+  geom_col(show.legend = FALSE) + # Bar chart
+  labs(
+    title = "Total Temperature by Month",
+    x = "Total Temperature",
+    y = "Month"
+  ) +
+  theme_minimal() + # Clean theme
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
+```
+
+## Bonus Point
+
+```{r}
+library(forcats)
+
+air.tib %>%
+  group_by(Month) %>%
+  summarise(total_temp = sum(Temp, na.rm = TRUE)) %>%
+  mutate(Month = recode(Month, `5` = "May", `6` = "June", `7` = "July", `8` = "August", `9` = "September")) %>%
+  mutate(Month = fct_reorder(Month, total_temp, .desc = TRUE)) %>%
+  ggplot(aes(x = total_temp, y = Month, fill = Month)) +
+  geom_col(show.legend = FALSE) +
+  labs(title = "Total Temperature by Month", x = "Total Temperature", y = "Month") +
+  theme_minimal() +
+  theme(plot.title = element_text(size = 16, face = "bold", hjust = 0.5))
+
+
+```
+
+# Ex 9.
+
+Using the air.tib data frame, group the data set by Month. Next, find out the maximum temperature for each month and display the result. Then, pipe the wrangled data into ggplot() and draw an appropriate chart.
+
+> Hint. There is more than one way to do this. You may use a combination of the pipe operator, group_by(), summarize(), and max(). Also, order the month by descending order of the maximum temperature of the month. Do all things to make the visualization most effective.
+
+```{r}
+library(RColorBrewer)
+
+# Wrangle the data and visualize it in one chain with a different color scheme
+air.tib %>%
+  # 1. Group the data by Month
+  group_by(Month) %>%
+  # 2. Find the maximum temperature for each month
+  summarise(max_temp = max(Temp, na.rm = TRUE)) %>%
+  # 3. Order the months by the maximum temperature in descending order
+  arrange(desc(max_temp)) %>%
+  # 4. Visualize the results using ggplot with a different color scheme
+  ggplot(aes(x = reorder(Month, -max_temp), y = max_temp, fill = factor(Month))) +
+  geom_col(show.legend = FALSE) +  # Bar chart
+  labs(
+    title = "Maximum Temperature by Month",
+    x = "Month",
+    y = "Maximum Temperature (°F)",
+    caption = "Data from air.tib"
+  ) +
+  theme_minimal() +  # Clean theme
+  scale_fill_brewer(palette = "Set3") +  # Different color palette from RColorBrewer
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14)
+  )
+```
+
+# Ex 10.
+
+Using the pipe operator on the tibble, "air.tib", create a new column called "temp_wind", which is the division of the "Temp" by the "Wind" column. Further, investigate the relationship between Ozone amount and "temp_wind" by visualizing the two variables in a chart. Visualize also the associations between Wind and Ozone as well as Wind and Temp. Visualize all three sets of relationships in a single chart. What can you infer about the relationships among the variables? write a chain of code from the beginning to the end of both wrangling and visualization.
+
+> Hint: It might be helpful to draw the three visualization separately and then think about how to show them in one chart. To do so, you will need to reshape the data so that you can utilize faceting in ggplot2. In any case, you will see the association between Ozone and "temp_wind" will be stronger than the association between Ozone and the temperature or wind separately before Temp and Wind are combined. Investigate the separate relationships and you will understand why the new variable has a stronger impact on Ozone.
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Wrangle the data to create 'temp_wind' and visualize the relationships
+air.tib %>%
+  # 1. Create a new column 'temp_wind' as the division of 'Temp' by 'Wind'
+  mutate(temp_wind = Temp / Wind) %>%
+  # 2. Gather the necessary columns into a long format
+  gather(key = "relationship", value = "value", Temp, Wind, temp_wind) %>%
+  # 3. Plot the relationships
+  ggplot(aes(x = value, y = Ozone)) +
+  geom_point(aes(color = relationship), size = 3, alpha = 0.7) +
+  facet_wrap(~ relationship, scales = "free", ncol = 2) +  # Facet the chart into different relationships
+  labs(
+    title = "Relationships Between Ozone and Other Variables",
+    x = "Variable Value",
+    y = "Ozone",
+    caption = "Data from air.tib"
+  ) +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
+    axis.text.x = element_text(size = 12),
+    axis.text.y = element_text(size = 12),
+    axis.title.x = element_text(size = 14),
+    axis.title.y = element_text(size = 14),
+    strip.text = element_text(size = 14, face = "bold")  # Styling the facet labels
+  )
+
+```
+
+::: {.callout-tip collapse="true"}
+## Response
+
+It would appear when reviewing the data of all three variables, that when there is higher temperature values there appears to be a degradation of the ozone layer or higher ozone values (positive correlation). With temperature and wind, as the temperature increases it appears that that wind becomes less powerful. In the case of strong winds, we see that the ozone layer value is lower thus a negative correlation.
+:::

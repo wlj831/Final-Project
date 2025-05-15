@@ -1,0 +1,89 @@
+---
+name: William
+surname: Jackson
+position: "QA Operations Specialist II"
+phone: +1 (805) 832-0842
+www: yourwebsite.com
+email: "williamlloydjackson@gmail.com"
+github: your-github
+linkedin: your-linkedin
+date: "`r format(Sys.time(), '%B %Y')`"
+output: 
+  vitae::latexcv:
+    theme: classic
+header-includes:
+   - \usepackage{enumitem}
+   - \setlist[itemize]{nosep, left=0pt}
+   - \setlist[enumerate]{nosep, left=0pt}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+if (!requireNamespace(c("tinytex","vitae","tibble"), quietly = TRUE)) {
+  install.packages(c("tinytex","vitae","tibble"))
+}
+
+if (Sys.which("pdflatex") == "" && !tinytex::is_tinytex()) {                    
+  message("► TinyTeX not found – installing")
+  tinytex::install_tinytex()        
+} else {
+  message("✓ LaTeX present – no installation needed.")
+}
+
+library(vitae)
+library(tibble)
+```
+
+# Objective
+
+Utilize my knowledge obtained in my bachelor’s degree of biology to work in the pharmaceutical and biotechnology industries. My industry and educational experiences have been focused in the following areas: manufacturing, quality control/assurance, implementation of GMP regulated SOPs, environmental monitoring, chemical analysis, genetic isolation of microbial DNA, and industry experience in an FDA regulated environment. These skills will allow me to be an optimal asset to any pharmaceutical or biotechnology company.  
+
+# Technical Skills
+
+-   **Programming Languages:** R and Python 
+-   **Web Technologies:** HTML, CSS/SCSS, Quarto 
+
+# Education
+
+```{r}
+tribble(
+  ~ Degree, ~ Year, ~ College, ~ Institution,
+  "Master of Business Admin", "2023 – Expected Graduation 2025", "Business Department", "Cal Poly Pomona",
+  "Bachelor of Biology", "2012 – 2017", "Biological Sciences Department", "CSUN"
+) %>%
+  detailed_entries(Degree, Year, College, Institution)
+```
+
+# Work Experience
+
+```{r}
+tribble(
+  ~ Years, ~ Company, ~ Duties, ~ Title,
+
+  "May 2022 – Present", "Kite Pharmaceutical",
+  list(
+    "Responsible for receiving and ensuring that apheresis material for cell culture manufacturing at the El Segundo site is within the GMP regulations. Additional roles include final shipment verification, review of packaging and manufacturing MPRs, generating final label material, and verifying final label material.  \\#1.",
+    "GMP/GDP Documentaitob.",
+    "FDA Regulated Environment",
+    "Initiating and resolving deviations within the department "
+  ),
+  "QA Operations Specialist II",
+
+  "March 2021 – May 2022", "Gilead Sciences",
+  list(
+    "Assists the Gilead La Verne and San Dimas sites with investigations into root causes for deviations in the following departments: Manufacturing, Quality Control, Packaging, Quality Assurance, and Engineering departments.",
+    "Use of SCADA, PCS, Maximo, GTrack, and Veeva Vault",
+    "Interdepartmental Communication with site wide operations ",
+    "Assisting in Initiating CAPAs "
+  ),
+  "QA Specialist"
+
+) %>%
+  detailed_entries(
+    what = Title,
+    when = Years,
+    with = Company,
+    why = Duties
+  )
+```

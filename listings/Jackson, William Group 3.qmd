@@ -1,0 +1,286 @@
+---
+title: "Data Wrangling of Final Project"
+author: "William Jackson"
+date: "`r format(Sys.time())`"
+format: 
+  html:
+    theme: darkly
+    toc: true
+    toc-location: right
+    toc-depth: 4
+    code-fold: false
+    code-line-numbers: true
+    code-link: true
+    number-sections: false
+    embed-resources: true
+    df-print: paged
+execute: 
+  freeze: auto
+  echo: true
+  warning: false
+  error: false
+---
+
+## Packages
+
+```{r}
+library(readxl)
+
+
+
+
+```
+
+## Upload the CSV File
+
+> ### This file will be uploaded from the original CSV files, one will be the data set that will be used for a geographical representation at a national level and then a local level. I will look at specifically areas within the Los Angeles/Orange County for more relevant information.
+
+```{r}
+
+# Define the raw file URL from GitHub
+url <- "https://raw.githubusercontent.com/wlj831/Raw-Data-GBA-5910-/refs/heads/main/Cleaned%20Raw%20Data%20File.csv"
+
+# Load the data directly into R
+data <- read.csv(url)
+
+# View the first few rows of the data
+head(data)
+
+# Load data from GitHub using base R
+data_traffic <- read.csv("https://raw.githubusercontent.com/wlj831/Raw-Data-GBA-5910-/refs/heads/main/Cleaned%20Road%20Traffic%20Accidents.csv")
+
+# View first few rows
+head(data_traffic)
+```
+
+## Data Cleaning and Geographical Map
+
+```{r}
+
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(maps)      # For state map data
+library(viridis)   # Optional: for color scales, or use red-blue as specified
+
+# Clean the data
+Clean_Data_Geography <- na.omit(data)
+
+# Keep only State and County
+State_County_Only <- Clean_Data_Geography[, c("State", "County")]
+
+# Count accidents by state
+accidents_by_state <- State_County_Only %>%
+  group_by(State) %>%
+  summarize(accident_count = n())
+
+# Make state names lowercase to match map data
+accidents_by_state$region <- tolower(accidents_by_state$State)
+
+# Get map data for US states
+states_map <- map_data("state")
+
+# Filter out Alaska and Hawaii
+states_map <- states_map %>% 
+  filter(!(region %in% c("alaska", "hawaii")))
+
+# Convert state abbreviations (e.g., "CA") to full state names
+accidents_by_state$region <- tolower(state.name[match(accidents_by_state$State, state.abb)])
+
+
+# Join accident data with map data
+map_data_joined <- left_join(states_map, accidents_by_state, by = "region")
+
+# --- Plot with custom background ---
+ggplot(map_data_joined, aes(long, lat, group = group, fill = accident_count)) +
+  geom_polygon(color = "white", size = 0.2) +
+  scale_fill_gradient(low = "blue", high = "red", na.value = "gray90") +
+  labs(title = "Car Accidents by State (Lower 48)", fill = "Accidents") +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.background = element_rect(fill = "#e6f2ff", color = NA),      # Light blue
+    panel.background = element_rect(fill = "#f7f7f7", color = NA),     # Soft gray map area
+    legend.background = element_rect(fill = "#e6f2ff", color = NA),    # Match plot bg
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title = element_blank(),
+    panel.grid = element_blank()
+  )
+
+```
+
+## Cities in Orange and LA County wih Most Car Accidents
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Step 1: Filter for LA and Orange Counties
+la_oc_data <- Clean_Data_Geography %>%
+  filter(State == "CA", County %in% c("Los Angeles", "Orange"))
+
+# Step 2: Count accidents by City
+accidents_by_city <- la_oc_data %>%
+  group_by(City) %>%
+  summarize(accident_count = n()) %>%
+  arrange(desc(accident_count))
+
+# Step 3: Select the top 20 cities with the most accidents
+top_20_cities <- accidents_by_city %>%
+  top_n(20, wt = accident_count)
+
+# Step 4: Plot the bar chart
+ggplot(top_20_cities, aes(x = reorder(City, -accident_count), y = accident_count, fill = accident_count)) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  labs(title = "Top 20 Cities by Accidents in LA & Orange Counties", x = "City", y = "Number of Accidents") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+```
+
+## Top 10 Cities with Car Accidents
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Step 1: Filter for the lower 48 states (excluding Alaska and Hawaii)
+lower_48_data <- Clean_Data_Geography %>%
+  filter(State != "AK", State != "HI")
+
+# Step 2: Count accidents by City
+accidents_by_city <- lower_48_data %>%
+  group_by(City) %>%
+  summarize(accident_count = n()) %>%
+  arrange(desc(accident_count))
+
+# Step 3: Select the top 10 cities with the most accidents
+top_10_cities <- accidents_by_city %>%
+  top_n(10, wt = accident_count)
+
+# Step 4: Plot the bar chart
+ggplot(top_10_cities, aes(x = reorder(City, -accident_count), y = accident_count, fill = accident_count)) +
+  geom_bar(stat = "identity") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  labs(title = "Top 10 Cities by Accidents in the Lower 48 States", x = "City", y = "Number of Accidents") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+## Analysis of location of Car Accidents
+
+> Now we will analyze if there is any causation on the fact that certain types of intersections places on the road have higher frequency of accidents. We will also analysis the severity of these accidents
+
+### Loading Data
+
+```{r}
+# View all column names in the dataset
+colnames(data_traffic)
+
+# View all unique values in 'Types_of_Junction'
+unique(data_traffic$Types_of_Junction)
+
+# Load the necessary libraries
+library(dplyr)
+
+# Count the frequency of each 'Types_of_Junction'
+junction_counts <- data_traffic %>%
+  group_by(Types_of_Junction) %>%
+  summarise(Count = n())
+
+# View the counted data_traffic
+print(junction_counts)
+
+# Load ggplot2 for plotting
+library(ggplot2)
+
+# Create a bar plot of junction counts
+ggplot(junction_counts, aes(x = Types_of_Junction, y = Count)) +
+  geom_bar(stat = "identity", fill = "green") +
+  labs(title = "Accidents by Type of Junction", 
+       x = "Type of Junction", 
+       y = "Number of Accidents") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r}
+# Load the necessary libraries
+library(ggplot2)
+library(dplyr)
+
+# Group the data_traffic by Types_of_Junction and Accident_severity
+severity_by_junction <- data_traffic %>%
+  group_by(Types_of_Junction, Accident_severity) %>%
+  summarise(Accident_Count = n(), .groups = "drop")  # Remove grouping after summarization
+
+# Create a bar graph to visualize the accident severity by junction type
+ggplot(severity_by_junction, aes(x = Types_of_Junction, y = Accident_Count, fill = factor(Accident_severity))) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Accident Severity by Type of Junction",
+       x = "Type of Junction", 
+       y = "Number of Accidents",
+       fill = "Accident Severity") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+
+## Chi-Square Test of Indepedence 
+> This will help test wehater accident severity is statiscally independent of the junction type - i.e. whether certain junctions tend to have more severe accidents. 
+
+```{r}
+# Create a contingency table
+contingency_table <- table(data_traffic$Types_of_Junction, data_traffic$Accident_severity)
+
+# Perform Chi-Square Test
+chisq_test <- chisq.test(contingency_table)
+
+# View the result
+chisq_test
+
+```
+
+
+## Proportional Heatmap
+> Visualization of the proportions of accident severity per junction type which types are skewed toward higher severity. 
+
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Summarize the data
+bubble_data <- data_traffic %>%
+  group_by(Types_of_Junction, Accident_severity) %>%
+  summarise(Count = n(), .groups = "drop")
+
+# Custom red-blue gradient (from blue -> white -> red)
+custom_colors <- c("#08306B", "#2171B5", "#6BAED6", "#F7F7F7", "#FC9272", "#CB181D", "#67000D")
+
+# Plot with enhanced color and size
+ggplot(bubble_data, aes(x = Types_of_Junction, y = factor(Accident_severity), size = Count, fill = Count)) +
+  geom_point(shape = 21, color = "black", alpha = 0.8) +
+  scale_size(range = c(4, 16)) +
+  scale_fill_gradientn(colors = custom_colors) +
+  labs(
+    title = "Bubble Heatmap: Accident Severity by Junction Type",
+    x = "Type of Junction",
+    y = "Accident Severity",
+    size = "Number of Accidents",
+    fill = "Number of Accidents"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "right",
+    plot.title = element_text(face = "bold", size = 16)
+  )
+
+```
+

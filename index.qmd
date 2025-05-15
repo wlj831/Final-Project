@@ -1,0 +1,31 @@
+---
+title: "Hi, I'm William Jackson"
+---
+
+
+::: {.columns}
+::: {.column width="40%"}
+
+<p align="center">
+  <img src="Profile.jpg" style="width: 60%;">
+</p>
+
+:::
+::: {.column width="60%" style="padding-left: 3rem;"}
+I'm a QA Operations Specialist in the Pharmaceutical Industry. I specialize in ensuring that pharmaceutical products are within the regulatory guidelines presented under government regulatory bodies such as the FDA and other international organizations. 
+:::
+:::
+
+## About Me
+
+I hold a <span class="highlight">Masters in Buiness Administration </span> from Cal Poly Pomona. Most of work experience and educational experience has been in biotechnology and pharamaceutical manufacturing, quality control, and quality assurance. I will be graduating with my graduate degree from Cal Poly Pomona in the Spring of 2025 with hopes of entering management. 
+
+
+
+## Let's Connect
+
+You can email me at williamlloydjackson@gmail.com or connect on [LinkedIn](https://www.linkedin.com/in/william-jackson-ab2a20161).
+
+---
+
+*Welcome to my portfolio.*
